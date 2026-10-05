@@ -411,7 +411,7 @@ The module only fails to start if the configured resolution is not available ove
 
 macOS support is experimental. Binaries are built for Apple silicon on macOS 14 (Sonoma) or newer against the same librealsense the Linux builds use.
 
-The module must run as root, so viam-server has to be started with `sudo` (or installed as a system LaunchDaemon, which runs as root). macOS attaches its own UVC camera driver to every RealSense interface, and taking the camera away from that driver is a privileged operation. At startup the module takes every attached RealSense away from the macOS driver once and keeps it for as long as the module runs. Without that, librealsense's own USB handling makes macOS re-enumerate the camera several times during startup and the camera comes up only sporadically. While the module runs the camera is not available to other macOS applications; it is released when the module exits.
+The module must run as root, so viam-server has to be started with `sudo` (or installed as a system LaunchDaemon, which runs as root). macOS attaches its own UVC camera driver to every RealSense interface, and taking the camera away from that driver is a privileged operation. Our librealsense build (see the vendored recipe's `2.57.7-0002-macos-capture-once.patch`) takes the camera away from the macOS driver once, on first use, and keeps it for as long as the module runs. Stock librealsense hands it back after every sensor power cycle, which makes macOS re-enumerate the camera several times during startup, and the camera comes up only sporadically. While the module runs the camera is not available to other macOS applications; it is released when the module exits.
 
 Known limitations on macOS:
 - Firmware updates are not supported.
